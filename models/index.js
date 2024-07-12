@@ -2,7 +2,7 @@ const { Sequelize } = require('sequelize');
 const sequelize = new Sequelize({
     dialect: 'sqlite',
     storage: './database.sqlite',
-    logging: false, // Disable logging
+    logging: false,
 });
 
 const Bet = require('./bet')(sequelize);
@@ -17,8 +17,7 @@ Object.keys(models).forEach(modelName => {
     }
 });
 
-// Force sync the database to drop and recreate the tables
-sequelize.sync({ force: true }).then(() => {
+sequelize.sync({ force: false }).then(() => {
     console.log("Database synchronized");
 }).catch((error) => {
     console.error("Error synchronizing database:", error);
