@@ -31,9 +31,13 @@ module.exports = {
             let totalItemsLost = [];
 
             const parseBetItem = (item) => {
-                const goldMatch = item.match(/^(\d+)g?$/);
+                const goldMatch = item.match(/^(\d+(?:\.\d+)?)([kKgG]?)$/);
                 if (goldMatch) {
-                    return { type: 'gold', value: parseInt(goldMatch[1]) };
+                    let value = parseFloat(goldMatch[1]);
+                    if (goldMatch[2].toLowerCase() === 'k') {
+                        value *= 1000;
+                    }
+                    return { type: 'gold', value: value };
                 } else {
                     return { type: 'item', value: item };
                 }
