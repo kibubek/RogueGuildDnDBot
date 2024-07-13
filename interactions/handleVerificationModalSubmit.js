@@ -13,10 +13,13 @@ async function handleVerificationModal(client, interaction) {
     await interaction.deferReply({ ephemeral: true });
 
     const accountName = interaction.fields.getTextInputValue('accountName');
-    const discordId = interaction.user.id;
     const messageId = interaction.fields.getTextInputValue('messageId'); // Get the message ID from the modal fields
 
     try {
+        // Fetch the original message and its author
+        const originalMessage = await interaction.channel.messages.fetch(messageId);
+        const discordId = originalMessage.author.id;
+
         // Check if the accountName or discordId already exists
         const existingAccount = await Verification.findOne({ where: { accountName } });
         const existingDiscordId = await Verification.findOne({ where: { discordId } });
