@@ -31,9 +31,9 @@ async function handleDeny(interaction) {
         components: [],
     });
 
-    await client.users.fetch(counteroffer.userId).then(user => user.send({
-        content: `Vaše protinabídka byla odmítnuta.`,
-    }));
+    /* await client.users.fetch(counteroffer.userId).then(user => user.send({
+         content: `Vaše protinabídka byla odmítnuta.`,
+     }));*/
 }
 
 module.exports = handleDeny;
