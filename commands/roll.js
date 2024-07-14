@@ -14,6 +14,6 @@ module.exports = {
 
         const rollResult = Math.floor(Math.random() * amount) + 1;
 
-        await interaction.reply(${ interaction.user.username } rollnul ${ rollResult }(1 - ${ amount }));
+        await interaction.reply(`${interaction.user.username} rollnul ${rollResult}(1 - ${amount})`);
     }
 };
