@@ -12,6 +12,7 @@ const handleModal = require('./interactions/handleModal');
 const handleMatchBet = require('./interactions/handleButton/handleMatchBet');
 const handleCancelMatch = require('./interactions/handleButton/handleCancelMatch');
 const handleConfirmMatch = require('./interactions/handleButton/handleConfirmMatch');
+const cronJobs = require('./utils/cronJobs')
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -57,7 +58,9 @@ for (const file of eventFiles) {
 
 client.once('ready', async () => {
     console.log(`Přihlášen jako ${client.user.tag}!`);
-
+    console.log('Starting cronjob for deleting old gamba messages')
+    cronJobs.scheduleDeleteOldPinnedMessages(client, guildId, GAMBA_CHANNEL_ID);
+    console.log('Cronjob for deleting old messages successfully started!')
     // Register slash commands
     const rest = new REST({ version: '10' }).setToken(token);
 
