@@ -3,6 +3,7 @@ const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = new Sequelize({
     dialect: 'sqlite',
     storage: 'rollBets.sqlite',
+    logging: false,
 });
 
 const RollBet = sequelize.define('RollBet', {

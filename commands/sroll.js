@@ -1,4 +1,3 @@
-// sroll.js
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { roll } = require('../utils/rollMechanic');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
@@ -31,7 +30,7 @@ module.exports = {
             amount: amount,
         });
 
-        const replyContent = `${initiator.tag} vyzval ${challenged.tag} na hod o ${amount}.\n${initiator.tag} hodil ${rollResult} (1 - ${amount})`;
+        const replyContent = `<@${initiator.id}> vyzval <@${challenged.id}> na hod o ${amount}.\n${initiator.tag} hodil ${rollResult} (1 - ${amount})`;
 
         if (rollResult === 1) {
             await bet.update({ gameStatus: 'finished', winner: challenged.id });
@@ -50,7 +49,7 @@ module.exports = {
 
         const createCollector = (msg, turn) => {
             const filter = i => i.customId === `counterRoll_${bet.id}`;
-            const collector = msg.createMessageComponentCollector({ filter, time: 60000 });
+            const collector = msg.createMessageComponentCollector({ filter, time: 6000000 });
 
             collector.on('collect', async i => {
                 if (i.user.id !== turn) {
@@ -63,7 +62,8 @@ module.exports = {
 
                 if (newRollResult === 1) {
                     await bet.update({ gameStatus: 'finished', winner: i.user.id === initiator.id ? challenged.id : initiator.id });
-                    await i.update({ content: `${i.user.tag} hodil ${newRollResult} a prohrál! <:kekw:1121474123332341830>`, components: [] });
+                    await i.message.edit({ components: [] }); // Remove button from the original message
+                    await i.reply({ content: `${i.user.tag} hodil ${newRollResult} a prohrál! <:kekw:1121474123332341830>`, components: [] });
                     collector.stop();
                 } else {
                     await i.message.edit({ components: [] }); // Remove button from the original message
