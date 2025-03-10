@@ -20,22 +20,22 @@ async function handleModal(interaction, client) {
         const row = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
                 .setCustomId(`accept_${counteroffer.id}`)
-                .setLabel('Přijmout')
+                .setLabel('Accept')
                 .setStyle(ButtonStyle.Success),
             new ButtonBuilder()
                 .setCustomId(`deny_${counteroffer.id}`)
-                .setLabel('Odmítnout')
+                .setLabel('Deny')
                 .setStyle(ButtonStyle.Danger)
         );
 
         const betMessageLink = `https://discord.com/channels/1036552465534947358/${GAMBA_CHANNEL_ID}/${bet.originalMessageId}`;
 
         await user.send({
-            content: `Máte novou protinabídku od ${interaction.user.username}: ${counterofferItem}\n[Odkaz na sázku](${betMessageLink})`,
+            content: `You have a new counteroffer from ${interaction.user.username}: ${counterofferItem}\n[Here is the bet](${betMessageLink})`,
             components: [row],
         });
 
-        await interaction.reply({ content: 'Protinabídka byla odeslána!', ephemeral: true });
+        await interaction.reply({ content: 'Counter offer has been sent!', ephemeral: true });
     }
 }
 

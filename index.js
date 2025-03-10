@@ -1,9 +1,6 @@
 const { Client, GatewayIntentBits, Collection, REST, Routes } = require('discord.js');
-const { token, clientId, guildId, GAMBA_CHANNEL_ID, NEWCOMMER_CHANNEL_ID, SHERPA_APPLICATIONS_CHANNEL_ID } = require('./config.json');
+const { token, clientId, guildId, GAMBA_CHANNEL_ID } = require('./config.json');
 const fs = require('fs');
-const { sendWelcomeMessage } = require('./utils/sendWelcomeMessage');
-const handleSherpaApplication = require('./interactions/handleSherpaModalSubmit');
-const handleVerificationModal = require('./interactions/handleVerificationModalSubmit');
 const handleAccept = require('./interactions/handleButton/accept');
 const handleCounterOffer = require('./interactions/handleButton/counterOffer');
 const handleDeny = require('./interactions/handleButton/deny');
@@ -102,16 +99,10 @@ client.on('interactionCreate', async (interaction) => {
         } else if (action === 'cancelmatch') {
             await handleCancelMatch(interaction);
         }
-    } else if (interaction.isModalSubmit && interaction.customId === 'sherpa-application-modal') {
-        handleSherpaApplication(client, interaction, SHERPA_APPLICATIONS_CHANNEL_ID);
-    } else if (interaction.isModalSubmit && interaction.customId === 'verificationModal') {
-        handleVerificationModal(client, interaction);
     } else if (interaction.isModalSubmit()) {
         await handleModal(interaction, client);
     }
 });
-client.on('guildMemberAdd', member => {
-    sendWelcomeMessage(member, NEWCOMMER_CHANNEL_ID);
-});
+
 
 client.login(token);

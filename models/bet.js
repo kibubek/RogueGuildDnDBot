@@ -24,6 +24,9 @@ module.exports = (sequelize) => {
         isRolled: {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
+        }, chosenSide: {
+            type: DataTypes.STRING,
+            allowNull: false,
         },
         winner: {
             type: DataTypes.STRING,

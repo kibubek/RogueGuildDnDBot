@@ -6,17 +6,17 @@ async function handleCounterOffer(interaction) {
     const bet = await Bet.findByPk(betId);
 
     if (!bet) {
-        return interaction.reply({ content: 'Tato sázka již neexistuje.', ephemeral: true });
+        return interaction.reply({ content: 'This bet is no longer active.', ephemeral: true });
     }
 
     const modal = new ModalBuilder()
         .setCustomId(`counterofferModal_${bet.id}`)
-        .setTitle('Protinabídka')
+        .setTitle('Call')
         .addComponents(
             new ActionRowBuilder().addComponents(
                 new TextInputBuilder()
                     .setCustomId('counterofferItem')
-                    .setLabel('Položka protinabídky')
+                    .setLabel('What to call with')
                     .setStyle(TextInputStyle.Short)
                     .setRequired(true)
             )

@@ -3,28 +3,29 @@ const { GAMBA_CHANNEL_ID } = require('../config.json');
 
 async function sendBetEmbed(client, bet, username) {
     const embed = new EmbedBuilder()
-        .setTitle('Sázka na hod mincí')
+        .setTitle(`Coinflip bet by ${username}`)
         .addFields(
-            { name: 'Uživatel', value: username, inline: true },
-            { name: 'Položka', value: bet.item, inline: true }
+            { name: 'User', value: username, inline: true },
+            { name: 'Bet', value: bet.item, inline: true },
+            { name: 'Chosen Side', value: bet.chosenSide || 'Not selected', inline: true }
         );
 
     if (bet.requestedItem) {
-        embed.addFields({ name: 'Požadovaná položka', value: bet.requestedItem, inline: true });
+        embed.addFields({ name: 'Requested Item', value: bet.requestedItem, inline: true });
     }
 
     const row = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
             .setCustomId(`counteroffer_${bet.id}`)
-            .setLabel('Protinabídka')
+            .setLabel('Counter offer')
             .setStyle(ButtonStyle.Primary),
         new ButtonBuilder()
             .setCustomId(`matchbet_${bet.id}`)
-            .setLabel('Dorovnat')
+            .setLabel('Call')
             .setStyle(ButtonStyle.Primary),
         new ButtonBuilder()
             .setCustomId(`deletebet_${bet.id}`)
-            .setLabel('Smazat sázku')
+            .setLabel('Delete bet')
             .setStyle(ButtonStyle.Danger)
     );
 
@@ -32,11 +33,9 @@ async function sendBetEmbed(client, bet, username) {
 
     try {
         const message = await channel.send({ embeds: [embed], components: [row] });
-
-        // Pin the message
         await message.pin();
 
-        // Save the original message ID
+        // Save the updated message id if needed
         bet.originalMessageId = message.id;
         await bet.save();
     } catch (error) {

@@ -13,21 +13,21 @@ async function handleDeny(interaction) {
     });
 
     if (!counteroffer) {
-        return interaction.reply({ content: 'Tato protinabídka již neexistuje.', ephemeral: true });
+        return interaction.reply({ content: 'This counter offer is no longer active.', ephemeral: true });
     }
 
     const bet = counteroffer.bet;
 
     if (!bet) {
-        return interaction.reply({ content: 'Tato sázka již neexistuje.', ephemeral: true });
+        return interaction.reply({ content: 'This bet is no longer active.', ephemeral: true });
     }
 
     if (bet.isRolled) {
-        return interaction.reply({ content: 'Tato sázka již byla přijata.', ephemeral: true });
+        return interaction.reply({ content: 'This bet has already been accepted.', ephemeral: true });
     }
 
     await interaction.update({
-        content: 'Odmítli jste protinabídku.',
+        content: 'You refused the counter offer.',
         components: [],
     });
 

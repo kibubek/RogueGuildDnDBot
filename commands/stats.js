@@ -5,10 +5,10 @@ const { Bet, Counteroffer } = require('../models');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('stats')
-        .setDescription('Statistiky uživatelova gamble života')
+        .setDescription(`Gambler's life statistics`)
         .addUserOption(option =>
             option.setName('user')
-                .setDescription('Uživatel, kterého chceš listnout')
+                .setDescription('Who?')
                 .setRequired(true)),
 
     async execute(interaction) {
@@ -82,30 +82,30 @@ module.exports = {
             const goldBalanceText = goldBalance >= 0 ? `v plusu o ${goldBalance}g` : `v mínusu o ${Math.abs(goldBalance)}g`;
 
             const embed = new EmbedBuilder()
-                .setTitle(`Statistiky gamble života uživatele ${user.username}`)
+                .setTitle(`${user.username} statistics`)
                 .addFields(
-                    { name: 'Celkem sázek', value: totalBets.toString(), inline: true },
-                    { name: 'Celkem výher', value: totalWins.toString(), inline: true },
-                    { name: 'Celkem protinávrhů', value: totalCounteroffers.toString(), inline: true },
-                    { name: 'Celkem přijatých sázek', value: totalAcceptedBets.toString(), inline: true },
-                    { name: 'Celkem vsazeno zlata', value: totalGoldBet.toString() + 'g', inline: true },
-                    { name: 'Celkem vyhrané zlato', value: totalGoldWon.toString() + 'g', inline: true },
-                    { name: 'Celkem prohrané zlato', value: totalGoldLost.toString() + 'g', inline: true },
-                    { name: 'Zlato bilance', value: goldBalanceText, inline: false }
+                    { name: 'Total Bets', value: totalBets.toString(), inline: true },
+                    { name: 'Total Wins', value: totalWins.toString(), inline: true },
+                    { name: 'Total Counter Offers', value: totalCounteroffers.toString(), inline: true },
+                    { name: 'Total Accepted Bets', value: totalAcceptedBets.toString(), inline: true },
+                    { name: 'Total Gold Wagered', value: totalGoldBet.toString() + 'g', inline: true },
+                    { name: 'Total Gold Won', value: totalGoldWon.toString() + 'g', inline: true },
+                    { name: 'Total Gold Lost', value: totalGoldLost.toString() + 'g', inline: true },
+                    { name: 'Total Gold', value: goldBalanceText, inline: false }
                 );
 
             if (totalItemsWon.length > 0) {
-                embed.addFields({ name: 'Vyhrané položky', value: totalItemsWon.join(', '), inline: false });
+                embed.addFields({ name: 'Items won', value: totalItemsWon.join(', '), inline: false });
             }
 
             if (totalItemsLost.length > 0) {
-                embed.addFields({ name: 'Prohrané položky', value: totalItemsLost.join(', '), inline: false });
+                embed.addFields({ name: 'Items lost', value: totalItemsLost.join(', '), inline: false });
             }
 
             await interaction.reply({ embeds: [embed], ephemeral: true });
         } catch (error) {
             console.error('Error fetching statistics:', error);
-            await interaction.reply({ content: 'Při načítání statistik došlo k chybě.', ephemeral: true });
+            await interaction.reply({ content: 'There has been an issue with loading up statistics.', ephemeral: true });
         }
     }
 };

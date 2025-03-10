@@ -6,14 +6,14 @@ const RollBet = require('../models/rollBet');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('sroll')
-        .setDescription('Chytrý hod s tlačítkem proti hodu')
+        .setDescription('Smart deathroll with buttons')
         .addIntegerOption(option =>
             option.setName('amount')
-                .setDescription('Maximální číslo')
+                .setDescription('Bet amount')
                 .setRequired(true))
         .addUserOption(option =>
             option.setName('member')
-                .setDescription('Člen, kterého chcete vyzvat')
+                .setDescription('Who to bet against?')
                 .setRequired(true)),
     async execute(interaction) {
         const amount = interaction.options.getInteger('amount');
@@ -30,18 +30,18 @@ module.exports = {
             amount: amount,
         });
 
-        const replyContent = `<@${initiator.id}> vyzval <@${challenged.id}> na hod o ${amount}.\n${initiator.tag} hodil ${rollResult} (1 - ${amount})`;
+        const replyContent = `<@${initiator.id}> challenged <@${challenged.id}> to roll for ${amount}.\n${initiator.tag} rolled ${rollResult} (1 - ${amount})`;
 
         if (rollResult === 1) {
             await bet.update({ gameStatus: 'finished', winner: challenged.id });
-            return interaction.reply(`${replyContent}\n${initiator.tag} prohrál! <:kekw:1121474123332341830><:kekw:1121474123332341830><:kekw:1121474123332341830>`);
+            return interaction.reply(`${replyContent}\n${initiator.tag} lost! <:todding:1347897995298869259><:todding:1347897995298869259><:todding:1347897995298869259>`);
         }
 
         const row = new ActionRowBuilder()
             .addComponents(
                 new ButtonBuilder()
                     .setCustomId(`counterRoll_${bet.id}`)
-                    .setLabel('Proti hod')
+                    .setLabel('Counter roll')
                     .setStyle(ButtonStyle.Primary)
             );
 
@@ -53,7 +53,7 @@ module.exports = {
 
             collector.on('collect', async i => {
                 if (i.user.id !== turn) {
-                    await i.reply({ content: 'Nehraješ teď.', ephemeral: true });
+                    await i.reply({ content: `It's not your turn!`, ephemeral: true });
                     return; // Do not stop the collector
                 }
 
@@ -63,18 +63,18 @@ module.exports = {
                 if (newRollResult === 1) {
                     await bet.update({ gameStatus: 'finished', winner: i.user.id === initiator.id ? challenged.id : initiator.id });
                     await i.message.edit({ components: [] }); // Remove button from the original message
-                    await i.reply({ content: `${i.user.tag} hodil ${newRollResult} a prohrál! <:kekw:1121474123332341830>`, components: [] });
+                    await i.reply({ content: `${i.user.tag} rolled ${newRollResult} and lost! <:todding:1347897995298869259>`, components: [] });
                     collector.stop();
                 } else {
                     await i.message.edit({ components: [] }); // Remove button from the original message
 
-                    const newReplyContent = `${i.user.tag} hodil ${newRollResult} (1 - ${lastRollResult})`;
+                    const newReplyContent = `${i.user.tag} rolled ${newRollResult} (1 - ${lastRollResult})`;
 
                     const newRow = new ActionRowBuilder()
                         .addComponents(
                             new ButtonBuilder()
                                 .setCustomId(`counterRoll_${bet.id}`)
-                                .setLabel('Proti hod')
+                                .setLabel('Counter roll')
                                 .setStyle(ButtonStyle.Primary)
                         );
 
@@ -88,7 +88,7 @@ module.exports = {
 
             collector.on('end', async collected => {
                 if (collected.size === 0 && bet.gameStatus !== 'finished') {
-                    await msg.edit({ content: `${msg.content}\n${turn === initiator.id ? initiator.tag : challenged.tag} nestihl rollnout!`, components: [] });
+                    await msg.edit({ content: `${msg.content}\n${turn === initiator.id ? initiator.tag : challenged.tag} took too long to roll and lost to timeout!`, components: [] });
                     await bet.update({ gameStatus: 'finished' });
                 }
             });

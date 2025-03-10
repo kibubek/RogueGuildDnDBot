@@ -6,7 +6,7 @@ async function handleConfirmMatch(client, interaction) {
     const bet = await Bet.findByPk(betId);
 
     if (!bet) {
-        return interaction.reply({ content: 'Tato sázka již neexistuje.', ephemeral: true });
+        return interaction.reply({ content: 'This bet is no longer active.', ephemeral: true });
     }
 
     const counteroffer = await Counteroffer.create({
@@ -21,22 +21,22 @@ async function handleConfirmMatch(client, interaction) {
     const row = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
             .setCustomId(`accept_${counteroffer.id}`)
-            .setLabel('Přijmout')
+            .setLabel('Accept')
             .setStyle(ButtonStyle.Success),
         new ButtonBuilder()
             .setCustomId(`deny_${counteroffer.id}`)
-            .setLabel('Odmítnout')
+            .setLabel('Deny')
             .setStyle(ButtonStyle.Danger)
     );
 
     const betMessageLink = `https://discord.com/channels/1036552465534947358/${GAMBA_CHANNEL_ID}/${bet.originalMessageId}`;
 
     await user.send({
-        content: `Uživatel ${interaction.user.username} dorovnal vaší nabídku: ${bet.item}\n[Odkaz na sázku](${betMessageLink})`,
+        content: `${interaction.user.username} called your bet with: ${bet.item}\n[Click here for the bet](${betMessageLink})`,
         components: [row],
     });
 
-    await interaction.update({ content: 'Protinabídka byla odeslána.', components: [], ephemeral: true });
+    await interaction.update({ content: 'Counter offer has been sent.', components: [], ephemeral: true });
 }
 
 module.exports = handleConfirmMatch;
