@@ -38,7 +38,7 @@ const RollBet = sequelize.define('RollBet', {
     }
 });
 
-sequelize.sync({ force: true }).then(() => {
+sequelize.sync({ force: false }).then(() => {
     console.log("RollBet database synchronized");
 }).catch((error) => {
     console.error("Error synchronizing database:", error);

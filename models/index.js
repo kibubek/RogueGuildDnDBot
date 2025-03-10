@@ -17,7 +17,7 @@ Object.keys(models).forEach(modelName => {
     }
 });
 
-sequelize.sync({ force: true }).then(() => {
+sequelize.sync({ force: false }).then(() => {
     console.log("Database synchronized");
 }).catch((error) => {
     console.error("Error synchronizing database:", error);
