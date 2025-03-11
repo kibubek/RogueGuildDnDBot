@@ -34,7 +34,7 @@ module.exports = {
 
         if (rollResult === 1) {
             await bet.update({ gameStatus: 'finished', winner: challenged.id });
-            return interaction.reply(`${replyContent}\n${initiator.tag} lost! <:todding:1347897995298869259><:todding:1347897995298869259><:todding:1347897995298869259>`);
+            return interaction.reply(`${replyContent}\n${initiator.tag} lost! <a:todding:1347897995298869259><a:todding:1347897995298869259><a:todding:1347897995298869259>`);
         }
 
         const row = new ActionRowBuilder()
@@ -63,7 +63,7 @@ module.exports = {
                 if (newRollResult === 1) {
                     await bet.update({ gameStatus: 'finished', winner: i.user.id === initiator.id ? challenged.id : initiator.id });
                     await i.message.edit({ components: [] }); // Remove button from the original message
-                    await i.reply({ content: `${i.user.tag} rolled ${newRollResult} and lost! <:todding:1347897995298869259>`, components: [] });
+                    await i.reply({ content: `${i.user.tag} rolled ${newRollResult} and lost! <a:todding:1347897995298869259>`, components: [] });
                     collector.stop();
                 } else {
                     await i.message.edit({ components: [] }); // Remove button from the original message
